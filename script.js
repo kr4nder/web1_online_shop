@@ -15,18 +15,25 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     let total = 0;
-    const list = document.createElement("ul");
+    cart.forEach((item, index) => {
+        const div = document.createElement("div");
+        div.textContent = `${item.title} — ${item.price} ₽`;
 
-    cart.forEach(item => {
-        const li = document.createElement("li");
-        li.textContent = `${item.title} — ${item.price}`;
-        list.appendChild(li);
+        const removeBtn = document.createElement("button");
+        removeBtn.textContent = "Удалить";
+        removeBtn.addEventListener("click", () => {
+            cart.splice(index, 1); // удаляем товар из массива
+            renderCart();          // обновляем корзину
+        });
+
+        div.appendChild(removeBtn);
+        cartItemsContainer.appendChild(div);
+
         total += item.price;
-    });
+  });
 
-    cartItemsContainer.appendChild(list);
-    totalEl.textContent = total;
-    }
+  totalEl.textContent = total;
+}
 
 
     buttons.forEach((button) => {
@@ -34,7 +41,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const product = button.closest("article"); // находим карточку
         const title = product.querySelector(".product-name").textContent;
         const price =  Number(product.querySelector('.product-price').textContent.replace(/\D/g, ''));
-        alert(("Добавлен товар: " + title + " " + price));
 
         // добавляем товар в массив корзины
         cart.push({ title, price });
