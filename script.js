@@ -12,7 +12,8 @@ const buttons = document.querySelectorAll(".add-to-cart"); // все кнопк�
 buttons.forEach((button) => {
   button.addEventListener("click", () => {
     const product = button.closest("article"); // находим карточку
-    const title = product.querySelector("h3").textContent;
+    const title = product.querySelector(".product-name").textContent;
+    const price = product.querySelector(".product-price").textContent;
     alert("Добавлен товар:", title);
   });
 });
