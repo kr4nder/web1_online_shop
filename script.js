@@ -86,4 +86,39 @@ document.addEventListener('DOMContentLoaded', () => {
   });
     // при загрузке страницы рендерим корзину
   renderCart();
+
+const orderModal = document.getElementById('order-modal');
+const orderForm = document.getElementById('order-form');
+const closeModalBtn = document.getElementById('close-modal');
+
+// открываем форму при клике на кнопку Оформить заказ
+    checkoutBtn.addEventListener('click', () => {
+    if (cart.length === 0) {
+        alert('Корзина пуста!');
+        return;
+    }
+    orderModal.style.display = 'flex';
+    });
+
+    // закрытие модального окна
+    closeModalBtn.addEventListener('click', () => {
+    orderModal.style.display = 'none';
+    });
+
+    // отправка формы
+    orderForm.addEventListener('submit', (e) => {
+    e.preventDefault(); // не перезагружать страницу
+    alert('Заказ создан!');
+
+    // очищаем корзину
+    cart = [];
+    localStorage.setItem('cart', JSON.stringify(cart));
+    renderCart();
+
+    // закрываем модалку
+    orderModal.style.display = 'none';
+
+    // сброс формы
+    orderForm.reset();
+    });
 });
