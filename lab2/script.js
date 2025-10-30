@@ -118,3 +118,32 @@ form.addEventListener('submit', event => {
 
   form.reset(); // очищаем форму
 });
+
+// удаление задачи по индексу
+function deleteTask(index) {
+  tasks.splice(index, 1);
+  saveTasks();
+  renderTasks();
+}
+
+// отметка задачи как выполненной/невыполненной
+function toggleComplete(index) {
+  tasks[index].completed = !tasks[index].completed;
+  saveTasks();
+  renderTasks();
+}
+
+// сохранение всех задач в localStorage
+function saveTasks() {
+  localStorage.setItem('tasks', JSON.stringify(tasks));
+}
+
+// загрузка задач из localStorage при открытии страницы
+function loadTasks() {
+  const saved = localStorage.getItem('tasks');
+  if (saved) tasks = JSON.parse(saved);
+}
+
+// загружаем сохранённые задачи при старте
+loadTasks();
+renderTasks();
