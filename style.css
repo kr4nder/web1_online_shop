@@ -1,0 +1,114 @@
+body {
+  margin: 0; /* убираем стандартные отступы*/
+  font-family: Arial, sans-serif;
+  line-height: 1.5;
+  background: #f9f9f9;
+  color: #333;
+}
+
+h1, h2, h3 {
+  margin: 0 0 10px; /* убираем стандартные отступы */
+}
+
+ul {
+  list-style: none; /* убираем маркеры */
+  padding: 0; 
+  margin: 0; /* обнуляем отступы */
+}
+
+a {
+  text-decoration: none; /* убираем подчёркивание у ссылок */
+  color: inherit; /* ссылка берёт цвет у родителя */
+}
+
+/* шапка */
+header {
+  background: #222;
+  color: #fff;
+  padding: 15px;
+  display: flex; /* делаем шапку flex-контейнером */
+  justify-content: space-between; /* заголовок слева, меню справа */
+  align-items: center; /* выравнивание по вертикали */
+}
+
+nav ul {
+  display: flex; /* делаем пункты меню горизонтальными */
+  gap: 15px; /* расстояние между пунктами */
+}
+
+/* основная часть */
+main {
+  display: flex; /* делаем #products и #cart на одной линии */
+  gap: 20px;
+  padding: 20px; /* внутренние отступы страницы */
+}
+
+/* каталог */
+#products {
+  flex: 3; /* каталог занимает больше места, чем корзина */
+  display: grid; 
+  grid-template-columns: repeat(3, 1fr); /* три карточки в ряд */
+  gap: 20px;
+}
+
+.product {  
+  background: #fff; /* белая карточка с закруглёнными углами */
+  padding: 15px;
+  border: 1px solid #ccc; /* лёгкая рамка */
+  border-radius: 8px;
+}
+
+.add-to-cart {
+  margin-top: 10px;
+  padding: 8px 12px;
+  background: #007bff;
+  color: white; /* кнопка синяя с белым текстом */
+  border: none;
+  cursor: pointer; /* меняется курсор при наведении */
+}
+
+.add-to-cart:hover { /* эффект при наведении (тёмно-синий)*/
+  background: #0056b3;
+}
+
+/* корзина */
+#cart {
+  flex: 1; /* занимает меньше места, чем каталог */
+  background: #fff; /* корзина справа, белый фон, рамка */
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+/* модалка */
+#order-modal {
+  display: none;
+  position: fixed; /* модалка перекрывает весь экран */
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5); /* полупрозрачный фон */
+  justify-content: center; /* внутри форма по центру */
+  align-items: center;
+}
+
+#order-modal form {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+/* адаптив */ 
+@media (max-width: 768px) {  /* на планшете - 2 карточки в ряд */
+  #products {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) { 
+  main {
+    flex-direction: column;  /* на телефоне - корзина уходит вниз */
+  }
+  #products {
+    grid-template-columns: 1fr;  /* каталог - карточки в одну колонку */
+  }
+}
