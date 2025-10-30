@@ -1,0 +1,79 @@
+/* общие стили */
+body {
+  font-family: system-ui, sans-serif;
+  background: #f3f4f6;
+  margin: 0;
+  padding: 0;
+}
+
+/* главный контейнер приложения */
+.app {
+  max-width: 600px;
+  margin: 40px auto;
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* форма добавления задачи */
+.task-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* поля ввода */
+.task-input, .task-date {
+  flex: 1 1 auto;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+/* кнопка добавления */
+.add-btn {
+  background: #4f46e5;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.add-btn:hover {
+  background: #4338ca;
+}
+
+/* список задач */
+.task-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* отдельная задача */
+.task-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  padding: 10px;
+}
+
+/* визуальное выделение выполненной задачи */
+.task-item.completed span {
+  text-decoration: line-through;
+  color: gray;
+}
+
+/* адаптив: при маленьком экране форма становится вертикальной */
+@media (max-width: 500px) {
+  .task-form {
+    flex-direction: column;
+  }
+}
