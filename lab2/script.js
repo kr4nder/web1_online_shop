@@ -57,3 +57,64 @@ list.className = 'task-list';
 app.append(list);
 
 document.body.append(app);
+
+//  добавление задач
+
+// массив для задач
+let tasks = [];
+
+// функция отрисовки всех задач на экране
+function renderTasks() {
+  // очищаем текущий список перед рендером
+  list.textContent = '';
+
+  // перебираем массив задач и создаём элементы
+  tasks.forEach((task, index) => {
+    const li = document.createElement('li');
+    li.className = 'task-item';
+    if (task.completed) li.classList.add('completed');
+
+    // текст задачи
+    const span = document.createElement('span');
+    span.textContent = `${task.text} (${task.date})`;
+
+    // кнопка "выполнено/не выполнено"
+    const completeBtn = document.createElement('button');
+    completeBtn.textContent = task.completed ? '↩' : '✔';
+    completeBtn.className = 'complete-btn';
+    completeBtn.addEventListener('click', () => toggleComplete(index));
+
+    // кнопка удаления
+    const deleteBtn = document.createElement('button');
+    deleteBtn.textContent = '🗑';
+    deleteBtn.className = 'delete-btn';
+    deleteBtn.addEventListener('click', () => deleteTask(index));
+
+    // собираем элемент задачи
+    li.append(span, completeBtn, deleteBtn);
+    list.append(li);
+  });
+}
+
+// обработчик формы (добавление задачи)
+form.addEventListener('submit', event => {
+  event.preventDefault(); // предотвращаем перезагрузку страницы
+
+  const text = input.value.trim();
+  const date = dateInput.value;
+
+  // проверяем, чтобы поле не было пустым
+  if (!text) return;
+
+  // добавляем новую задачу в массив
+  tasks.push({
+    text,
+    date,
+    completed: false
+  });
+
+  saveTasks();
+  renderTasks();
+
+  form.reset(); // очищаем форму
+});
