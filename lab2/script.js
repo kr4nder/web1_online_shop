@@ -68,10 +68,25 @@ function renderTasks() {
   // очищаем текущий список перед рендером
   list.textContent = '';
 
-  // перебираем массив задач и создаём элементы
-  tasks.forEach((task, index) => {
+  // фильтруем задачи по поиску и фильтру
+  const filtered = tasks.filter(task => {
+    const matchesSearch = task.text.toLowerCase().includes(search.value.toLowerCase());
+    const matchesFilter =
+      filter.value === 'Все' ||
+      (filter.value === 'Выполненные' && task.completed) ||
+      (filter.value === 'Невыполненные' && !task.completed);
+    return matchesSearch && matchesFilter;
+  });
+
+  // сортируем по дате
+  sortTasks();
+
+  // создаём элементы для отфильтрованных задач
+  filtered.forEach((task, index) => {
     const li = document.createElement('li');
     li.className = 'task-item';
+    li.draggable = true; // чтобы можно было перетаскивать
+
     if (task.completed) li.classList.add('completed');
 
     // текст задачи
@@ -81,13 +96,11 @@ function renderTasks() {
     // кнопка "выполнено/не выполнено"
     const completeBtn = document.createElement('button');
     completeBtn.textContent = task.completed ? '↩' : '✔';
-    completeBtn.className = 'complete-btn';
     completeBtn.addEventListener('click', () => toggleComplete(index));
 
     // кнопка удаления
     const deleteBtn = document.createElement('button');
     deleteBtn.textContent = '🗑';
-    deleteBtn.className = 'delete-btn';
     deleteBtn.addEventListener('click', () => deleteTask(index));
 
     // собираем элемент задачи
@@ -95,6 +108,12 @@ function renderTasks() {
     list.append(li);
   });
 }
+
+
+
+
+
+
 
 // обработчик формы (добавление задачи)
 form.addEventListener('submit', event => {
@@ -147,3 +166,36 @@ function loadTasks() {
 // загружаем сохранённые задачи при старте
 loadTasks();
 renderTasks();
+
+// поиск и фильтрация
+
+// перерисовываем задачи при вводе текста в поиск
+search.addEventListener('input', () => renderTasks());
+
+// изменяем фильтр - тоже перерисовываем
+filter.addEventListener('change', () => renderTasks());
+
+// сортировка
+function sortTasks() {
+  tasks.sort((a, b) => new Date(a.date) - new Date(b.date));
+}
+
+// drag & drop
+let draggedIndex = null;
+
+// когда пользователь начинает перетаскивать элемент
+list.addEventListener('dragstart', e => {
+  draggedIndex = [...list.children].indexOf(e.target);
+});
+
+// разрешаем вбрасывание элемента
+list.addEventListener('dragover', e => e.preventDefault());
+
+// при отпускании элемента
+list.addEventListener('drop', e => {
+  const droppedIndex = [...list.children].indexOf(e.target);
+  const [moved] = tasks.splice(draggedIndex, 1);
+  tasks.splice(droppedIndex, 0, moved);
+  saveTasks();
+  renderTasks();
+});
