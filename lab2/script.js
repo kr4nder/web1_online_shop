@@ -91,12 +91,46 @@ function renderTasks() {
 
     // текст задачи
     const span = document.createElement('span');
-    span.textContent = `${task.text} (${task.date})`;
+    const formattedDate = task.date
+      ? task.date.split('-').reverse().join('.') // день-месяц-год
+      : 'без даты';
+    span.textContent = `${task.text} (${formattedDate})`;
 
     // кнопка "выполнено/не выполнено"
     const completeBtn = document.createElement('button');
     completeBtn.textContent = task.completed ? '↩' : '✔';
     completeBtn.addEventListener('click', () => toggleComplete(index));
+
+    const editBtn = document.createElement('button');
+    editBtn.textContent = '✎';
+    editBtn.addEventListener('click', () => {
+      // заменяем span на инпуты для редактирования
+      const textInput = document.createElement('input');
+      textInput.type = 'text';
+      textInput.value = task.text;
+      textInput.className = 'task-input';
+
+      const dateInput = document.createElement('input');
+      dateInput.type = 'date';
+      dateInput.value = task.date;
+      dateInput.className = 'task-date';
+
+      const saveBtn = document.createElement('button');
+      saveBtn.textContent = '💾';
+      saveBtn.addEventListener('click', () => {
+        task.text = textInput.value.trim() || task.text;
+        task.date = dateInput.value;
+        saveTasks();
+        renderTasks();
+      });
+
+      const cancelBtn = document.createElement('button');
+      cancelBtn.textContent = '✖';
+      cancelBtn.addEventListener('click', () => renderTasks());
+
+      li.textContent = ''; // очищаем старый li
+      li.append(textInput, dateInput, saveBtn, cancelBtn);
+    });
 
     // кнопка удаления
     const deleteBtn = document.createElement('button');
@@ -104,16 +138,10 @@ function renderTasks() {
     deleteBtn.addEventListener('click', () => deleteTask(index));
 
     // собираем элемент задачи
-    li.append(span, completeBtn, deleteBtn);
+    li.append(span, completeBtn, editBtn, deleteBtn);
     list.append(li);
   });
 }
-
-
-
-
-
-
 
 // обработчик формы (добавление задачи)
 form.addEventListener('submit', event => {
@@ -132,6 +160,7 @@ form.addEventListener('submit', event => {
     completed: false
   });
 
+  sortTasks();
   saveTasks();
   renderTasks();
 
