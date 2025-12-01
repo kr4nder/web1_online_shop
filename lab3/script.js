@@ -1,6 +1,7 @@
 const tilesContainer = document.querySelector('.tiles');
 const gridContainer = document.querySelector('.grid');
 const scoreDisplay = document.getElementById('score');
+const recordsList = document.getElementById('records');
 
 // динамическое создание сетки
 function createGrid() {
@@ -12,20 +13,61 @@ function createGrid() {
 }
 createGrid();
 
-// состояние игры
-let board = [
-  [0, 0, 0, 0],
-  [0, 0, 0, 0],
-  [0, 0, 0, 0],
-  [0, 0, 0, 0]
-];
+let board;
+let score;
 
-let score = 0;
-
-function updateScore(amount) {
-  score += amount;
-  scoreDisplay.textContent = score;
+// сохранение в localsorage
+function saveGame() {
+  localStorage.setItem("board2048", JSON.stringify(board));
+  localStorage.setItem("score2048", score.toString());
 }
+
+function loadGame() {
+  const savedBoard = localStorage.getItem("board2048");
+  const savedScore = localStorage.getItem("score2048");
+
+  if (savedBoard && savedScore) {
+    board = JSON.parse(savedBoard);
+    score = Number(savedScore);
+    scoreDisplay.textContent = score;
+    return true;
+  }
+  return false;
+}
+
+// рекорды
+function saveRecord(newScore) {
+  let records = JSON.parse(localStorage.getItem("records2048")) || [];
+
+  // добавить в массив
+  records.push(newScore);
+
+  // сортировка по убыванию
+  records.sort((a, b) => b - a);
+
+  // оставить только топ-10
+  records = records.slice(0, 10);
+
+  // сохранить
+  localStorage.setItem("records2048", JSON.stringify(records));
+
+  renderRecords();
+}
+
+function renderRecords() {
+  recordsList.innerHTML = ""; // очищаем
+
+  const records = JSON.parse(localStorage.getItem("records2048")) || [];
+
+  records.forEach((r, i) => {
+    const li = document.createElement("li");
+    li.textContent = `${i + 1}. ${r}`;
+    recordsList.appendChild(li);
+  });
+}
+
+
+// игровая логика
 
 // генерация новой плитки
 function addRandomTile() {
@@ -195,15 +237,27 @@ document.addEventListener("keydown", (e) => {
 
   if (moved) {
     board = result.board;
-
-    updateScore(result.score);
+    score += result.score;
+    scoreDisplay.textContent = score;
 
     addRandomTile();
     renderBoard();
+    saveGame();
   }
 });
 
-// старт игры
-addRandomTile();
-addRandomTile();
+// старт игры (загрузка сохранённого)
+if (!loadGame()) {
+  board = [
+    [0,0,0,0],
+    [0,0,0,0],
+    [0,0,0,0],
+    [0,0,0,0]
+  ];
+  score = 0;
+  addRandomTile();
+  addRandomTile();
+}
+
 renderBoard();
+renderRecords();
