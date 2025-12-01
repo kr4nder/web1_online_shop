@@ -248,6 +248,30 @@ undoBtn.addEventListener('click', () => {
   prevBoard = null; // только один откат
 });
 
+
+// ссылки на мобильные кнопки
+const upBtn = document.getElementById('upBtn');
+const downBtn = document.getElementById('downBtn');
+const leftBtn = document.getElementById('leftBtn');
+const rightBtn = document.getElementById('rightBtn');
+
+// функция для имитации нажатия клавиши
+function handleMobileMove(direction) {
+  let event = { key: "" };
+  if (direction === "up") event.key = "ArrowUp";
+  if (direction === "down") event.key = "ArrowDown";
+  if (direction === "left") event.key = "ArrowLeft";
+  if (direction === "right") event.key = "ArrowRight";
+  document.dispatchEvent(new KeyboardEvent('keydown', event));
+}
+
+// обработчики для кнопок
+upBtn.addEventListener('click', () => handleMobileMove('up'));
+downBtn.addEventListener('click', () => handleMobileMove('down'));
+leftBtn.addEventListener('click', () => handleMobileMove('left'));
+rightBtn.addEventListener('click', () => handleMobileMove('right'));
+
+
 // старт игры
 if (!loadGame()) {
   startNewGame();
