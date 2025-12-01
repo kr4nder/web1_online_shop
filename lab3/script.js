@@ -49,8 +49,13 @@ function saveRecord(newScore) {
   renderRecords();
 }
 
+// рендер рекордов
 function renderRecords() {
-  recordsList.innerHTML = ""; 
+  // удаляем все текущие элементы списка
+  while (recordsList.firstChild) {
+    recordsList.removeChild(recordsList.firstChild);
+  }
+
   const records = JSON.parse(localStorage.getItem("records2048")) || [];
   records.forEach((r, i) => {
     const li = document.createElement("li");
@@ -222,11 +227,18 @@ document.addEventListener("keydown", (e) => {
   }
 });
 
-// кнопка "Новая игра"
+// очистка плиток
+function clearTilesContainer() {
+  while (tilesContainer.firstChild) {
+    tilesContainer.removeChild(tilesContainer.firstChild);
+  }
+}
+
+// генерация новой игры
 function startNewGame() {
-  board = Array(4).fill(0).map(()=>[0,0,0,0]);
+  board = Array(4).fill(0).map(() => [0, 0, 0, 0]);
   score = 0;
-  tilesContainer.innerHTML = '';
+  clearTilesContainer();
   addRandomTile();
   addRandomTile();
   renderBoard();
