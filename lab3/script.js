@@ -1,4 +1,15 @@
 const tilesContainer = document.querySelector('.tiles');
+const gridContainer = document.querySelector('.grid');
+
+// динамическое создание сетки
+function createGrid() {
+  for (let i = 0; i < 16; i++) {
+    const cell = document.createElement('div');
+    cell.className = 'grid-cell';
+    gridContainer.appendChild(cell);
+  }
+}
+createGrid();
 
 let board = [
   [0, 0, 0, 0],
