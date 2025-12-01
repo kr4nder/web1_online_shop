@@ -26,6 +26,7 @@ function saveGame() {
   localStorage.setItem("score2048", score.toString());
 }
 
+// загрузка игры
 function loadGame() {
   const savedBoard = localStorage.getItem("board2048");
   const savedScore = localStorage.getItem("score2048");
@@ -51,11 +52,9 @@ function saveRecord(newScore) {
 
 // рендер рекордов
 function renderRecords() {
-  // удаляем все текущие элементы списка
   while (recordsList.firstChild) {
     recordsList.removeChild(recordsList.firstChild);
   }
-
   const records = JSON.parse(localStorage.getItem("records2048")) || [];
   records.forEach((r, i) => {
     const li = document.createElement("li");
@@ -81,32 +80,15 @@ function addRandomTile() {
   board[i][j] = value;
 
   const tile = document.createElement('div');
-  tile.className = `tile tile-${value}`;
+  tile.className = `tile tile-${value} new`;
   tile.textContent = value;
   tile.dataset.row = i;
   tile.dataset.col = j;
   tile.style.top  = (i * 116) + 'px';
   tile.style.left = (j * 116) + 'px';
   tilesContainer.appendChild(tile);
-}
 
-// отрисовка доски
-function renderBoard() {
-  document.querySelectorAll('.tile').forEach(t => t.remove());
-  for (let i = 0; i < 4; i++) {
-    for (let j = 0; j < 4; j++) {
-      if (board[i][j] !== 0) {
-        const tile = document.createElement('div');
-        tile.className = `tile tile-${board[i][j]}`;
-        tile.textContent = board[i][j];
-        tile.dataset.row = i;
-        tile.dataset.col = j;
-        tile.style.top  = (i * 116) + 'px';
-        tile.style.left = (j * 116) + 'px';
-        tilesContainer.appendChild(tile);
-      }
-    }
-  }
+  setTimeout(() => tile.classList.remove('new'), 200);
 }
 
 // обработка линий
@@ -203,6 +185,62 @@ function savePrevState() {
   prevScore = score;
 }
 
+// плавный рендер доски
+function renderBoard() {
+  const existingTiles = Array.from(tilesContainer.children);
+  const tilesMap = {};
+  existingTiles.forEach(tile => {
+    const key = `${tile.dataset.row}-${tile.dataset.col}-${tile.textContent}`;
+    tilesMap[key] = tile;
+  });
+
+  const newTiles = [];
+
+  for (let i = 0; i < 4; i++) {
+    for (let j = 0; j < 4; j++) {
+      const value = board[i][j];
+      if (value === 0) continue;
+
+      const key = `${i}-${j}-${value}`;
+      let tile = tilesMap[key];
+
+      if (!tile) {
+        // создаём новую плитку
+        tile = document.createElement('div');
+        tile.className = `tile tile-${value} new`;
+        tile.textContent = value;
+        tile.dataset.row = i;
+        tile.dataset.col = j;
+        tile.style.top  = (i * 116) + 'px';
+        tile.style.left = (j * 116) + 'px';
+        tilesContainer.appendChild(tile);
+        newTiles.push(tile);
+        setTimeout(() => tile.classList.remove('new'), 200);
+      } else {
+        // плитка уже есть, проверяем позицию
+        const oldRow = parseInt(tile.dataset.row);
+        const oldCol = parseInt(tile.dataset.col);
+        if (oldRow !== i || oldCol !== j) {
+          tile.dataset.row = i;
+          tile.dataset.col = j;
+          tile.style.top = (i * 116) + 'px';
+          tile.style.left = (j * 116) + 'px';
+        }
+      }
+    }
+  }
+
+  // удаляем старые плитки, которых больше нет на доске
+  existingTiles.forEach(tile => {
+    const row = parseInt(tile.dataset.row);
+    const col = parseInt(tile.dataset.col);
+    const value = parseInt(tile.textContent);
+    if (board[row][col] !== value) {
+      tilesContainer.removeChild(tile);
+    }
+  });
+}
+
 // обработка хода
 document.addEventListener("keydown", (e) => {
   let result = null;
@@ -214,7 +252,7 @@ document.addEventListener("keydown", (e) => {
 
   const moved = JSON.stringify(result.board) !== JSON.stringify(board);
   if (moved) {
-    savePrevState(); // сохраняем для undo
+    savePrevState();
     board = result.board;
     score += result.score;
     scoreDisplay.textContent = score;
@@ -234,7 +272,7 @@ function clearTilesContainer() {
   }
 }
 
-// генерация новой игры
+// новая игра
 function startNewGame() {
   board = Array(4).fill(0).map(() => [0, 0, 0, 0]);
   score = 0;
@@ -249,7 +287,7 @@ function startNewGame() {
 
 newGameBtn.addEventListener('click', startNewGame);
 
-// кнопка "Отмена хода"
+// отмена хода
 undoBtn.addEventListener('click', () => {
   if (!prevBoard) return;
   board = prevBoard.map(row => [...row]);
@@ -257,17 +295,15 @@ undoBtn.addEventListener('click', () => {
   scoreDisplay.textContent = score;
   renderBoard();
   saveGame();
-  prevBoard = null; // только один откат
+  prevBoard = null;
 });
 
-
-// ссылки на мобильные кнопки
+// мобильные кнопки
 const upBtn = document.getElementById('upBtn');
 const downBtn = document.getElementById('downBtn');
 const leftBtn = document.getElementById('leftBtn');
 const rightBtn = document.getElementById('rightBtn');
 
-// функция для имитации нажатия клавиши
 function handleMobileMove(direction) {
   let event = { key: "" };
   if (direction === "up") event.key = "ArrowUp";
@@ -277,17 +313,13 @@ function handleMobileMove(direction) {
   document.dispatchEvent(new KeyboardEvent('keydown', event));
 }
 
-// обработчики для кнопок
 upBtn.addEventListener('click', () => handleMobileMove('up'));
 downBtn.addEventListener('click', () => handleMobileMove('down'));
 leftBtn.addEventListener('click', () => handleMobileMove('left'));
 rightBtn.addEventListener('click', () => handleMobileMove('right'));
 
-
 // старт игры
-if (!loadGame()) {
-  startNewGame();
-}
+if (!loadGame()) startNewGame();
 
 renderBoard();
 renderRecords();
