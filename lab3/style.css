@@ -1,0 +1,121 @@
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background:#faf8ef;
+  text-align:center;
+  padding:40px;
+}
+h1 { font-size:80px; font-weight:bold; color:#776e65; margin-bottom:20px; }
+
+.game-board {
+  width:480px;
+  height:480px;
+  margin:0 auto;
+  background:#bbada0;
+  border-radius:10px;
+  padding:10px;
+  position:relative;
+}
+.grid {
+  position:absolute;
+  inset:10px;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  grid-template-rows:repeat(4,1fr);
+  gap:10px;
+}
+.grid-cell {
+  background:#cdc1b4;
+  border-radius:6px;
+}
+.tiles {
+  position:absolute;
+  inset:10px;
+}
+.tile {
+  position:absolute;
+  width:106px;
+  height:106px;
+  background:#eee4da;
+  border-radius:6px;
+  font-size:50px;
+  font-weight:bold;
+  color:#776e65;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:top 0.15s ease, left 0.15s ease;
+  box-shadow:0 2px 5px rgba(0,0,0,0.2);
+}
+
+.tile-2    { background:#eee4da; }
+.tile-4    { background:#ede0c8; }
+.tile-8    { background:#f2b179; color:white; }
+.tile-16   { background:#f59563; color:white; }
+.tile-32   { background:#f67c5f; color:white; }
+.tile-64   { background:#f65e3b; color:white; }
+.tile-128  { background:#edcf72; color:white; font-size:40px; }
+.tile-256  { background:#edcc61; color:white; font-size:40px; }
+.tile-512  { background:#edc850; color:white; font-size:40px; }
+.tile-1024 { background:#edc53f; color:white; font-size:30px; }
+.tile-2048 { background:#edc22e; color:white; font-size:30px; }
+
+.tile.new {
+  animation:appear 0.2s ease;
+}
+@keyframes appear {
+  from { transform:scale(0); }
+  to   { transform:scale(1); }
+}
+
+button {
+  margin: 5px;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  background: #8f7a66;
+  color: white;
+  cursor: pointer;
+}
+button:hover {
+  background: #776e65;
+}
+
+/* мобильные кнопки */
+.mobile-controls {
+  margin-top: 20px;
+}
+.mobile-controls .middle-row {
+  display: flex;
+  justify-content: center;
+}
+.mobile-controls button {
+  width: 60px;
+  height: 60px;
+  font-size: 24px;
+  margin: 5px;
+  background:#bbada0;
+}
+.mobile-controls button:active {
+  background:#8f7a66;
+}
+.game-over-message {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  background: rgba(238, 228, 218, 0.9);
+  padding: 30px 50px;
+  border-radius: 10px;
+  font-size: 36px;
+  color: #776e65;
+  font-weight: bold;
+  z-index: 10;
+  transition: transform 0.3s ease;
+}
+
+.game-over-message.show {
+  transform: translate(-50%, -50%) scale(1);
+}
+
