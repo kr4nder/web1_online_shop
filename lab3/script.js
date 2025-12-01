@@ -2,6 +2,7 @@ const tilesContainer = document.querySelector('.tiles');
 const gridContainer = document.querySelector('.grid');
 const scoreDisplay = document.getElementById('score');
 const recordsList = document.getElementById('records');
+const newGameBtn = document.getElementById('newGameBtn');
 
 // динамическое создание сетки
 function createGrid() {
@@ -16,7 +17,7 @@ createGrid();
 let board;
 let score;
 
-// сохранение в localsorage
+// сохранение в localStorage
 function saveGame() {
   localStorage.setItem("board2048", JSON.stringify(board));
   localStorage.setItem("score2048", score.toString());
@@ -39,23 +40,16 @@ function loadGame() {
 function saveRecord(newScore) {
   let records = JSON.parse(localStorage.getItem("records2048")) || [];
 
-  // добавить в массив
   records.push(newScore);
-
-  // сортировка по убыванию
   records.sort((a, b) => b - a);
-
-  // оставить только топ-10
   records = records.slice(0, 10);
 
-  // сохранить
   localStorage.setItem("records2048", JSON.stringify(records));
-
   renderRecords();
 }
 
 function renderRecords() {
-  recordsList.innerHTML = ""; // очищаем
+  recordsList.innerHTML = ""; 
 
   const records = JSON.parse(localStorage.getItem("records2048")) || [];
 
@@ -65,7 +59,6 @@ function renderRecords() {
     recordsList.appendChild(li);
   });
 }
-
 
 // игровая логика
 
@@ -222,6 +215,24 @@ function moveDown(board) {
   return { board: newBoard, score: gained };
 }
 
+// проверка конца игры
+function isGameOver() {
+  for (let i = 0; i < 4; i++) {
+    for (let j = 0; j < 4; j++) {
+      if (board[i][j] === 0) return false;
+      if (i < 3 && board[i][j] === board[i+1][j]) return false;
+      if (j < 3 && board[i][j] === board[i][j+1]) return false;
+    }
+  }
+  return true;
+}
+
+function handleGameOver() {
+  alert("Игра окончена!");
+  saveRecord(score);
+  startNewGame();
+}
+
 // обработка хода
 document.addEventListener("keydown", (e) => {
   let result = null;
@@ -243,11 +254,15 @@ document.addEventListener("keydown", (e) => {
     addRandomTile();
     renderBoard();
     saveGame();
+
+    if (isGameOver()) {
+      handleGameOver();
+    }
   }
 });
 
-// старт игры (загрузка сохранённого)
-if (!loadGame()) {
+// новая игра
+function startNewGame() {
   board = [
     [0,0,0,0],
     [0,0,0,0],
@@ -255,8 +270,19 @@ if (!loadGame()) {
     [0,0,0,0]
   ];
   score = 0;
+  tilesContainer.innerHTML = '';
   addRandomTile();
   addRandomTile();
+  renderBoard();
+  scoreDisplay.textContent = score;
+  saveGame();
+}
+
+newGameBtn.addEventListener('click', startNewGame);
+
+// старт игры (загрузка сохранённого)
+if (!loadGame()) {
+  startNewGame();
 }
 
 renderBoard();
