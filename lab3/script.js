@@ -3,6 +3,7 @@ const gridContainer = document.querySelector('.grid');
 const scoreDisplay = document.getElementById('score');
 const recordsList = document.getElementById('records');
 const newGameBtn = document.getElementById('newGameBtn');
+const undoBtn = document.getElementById('undoBtn');
 
 // динамическое создание сетки
 function createGrid() {
@@ -16,6 +17,8 @@ createGrid();
 
 let board;
 let score;
+let prevBoard = null;
+let prevScore = 0;
 
 // сохранение в localStorage
 function saveGame() {
@@ -39,20 +42,16 @@ function loadGame() {
 // рекорды
 function saveRecord(newScore) {
   let records = JSON.parse(localStorage.getItem("records2048")) || [];
-
   records.push(newScore);
   records.sort((a, b) => b - a);
   records = records.slice(0, 10);
-
   localStorage.setItem("records2048", JSON.stringify(records));
   renderRecords();
 }
 
 function renderRecords() {
   recordsList.innerHTML = ""; 
-
   const records = JSON.parse(localStorage.getItem("records2048")) || [];
-
   records.forEach((r, i) => {
     const li = document.createElement("li");
     li.textContent = `${i + 1}. ${r}`;
@@ -89,7 +88,6 @@ function addRandomTile() {
 // отрисовка доски
 function renderBoard() {
   document.querySelectorAll('.tile').forEach(t => t.remove());
-
   for (let i = 0; i < 4; i++) {
     for (let j = 0; j < 4; j++) {
       if (board[i][j] !== 0) {
@@ -124,7 +122,6 @@ function processLine(line) {
   }
 
   while (result.length < 4) result.push(0);
-
   return { line: result, score: gained };
 }
 
@@ -132,98 +129,60 @@ function processLine(line) {
 function moveLeft(board) {
   let gained = 0;
   let newBoard = [];
-
   for (let i = 0; i < 4; i++) {
     const {line, score} = processLine(board[i]);
     newBoard.push(line);
     gained += score;
   }
-
   return { board: newBoard, score: gained };
 }
 
 function moveRight(board) {
   let gained = 0;
   let newBoard = [];
-
   for (let i = 0; i < 4; i++) {
     const reversed = [...board[i]].reverse();
     const {line, score} = processLine(reversed);
     newBoard.push(line.reverse());
     gained += score;
   }
-
   return { board: newBoard, score: gained };
 }
 
 function moveUp(board) {
   let gained = 0;
-  let newBoard = [
-    [0,0,0,0],
-    [0,0,0,0],
-    [0,0,0,0],
-    [0,0,0,0]
-  ];
-
+  let newBoard = Array(4).fill(0).map(()=>[0,0,0,0]);
   for (let col = 0; col < 4; col++) {
-    let column = [
-      board[0][col],
-      board[1][col],
-      board[2][col],
-      board[3][col]
-    ];
-
+    let column = [board[0][col], board[1][col], board[2][col], board[3][col]];
     const {line, score} = processLine(column);
     gained += score;
-
-    for (let row = 0; row < 4; row++) {
-      newBoard[row][col] = line[row];
-    }
+    for (let row = 0; row < 4; row++) newBoard[row][col] = line[row];
   }
-
   return { board: newBoard, score: gained };
 }
 
 function moveDown(board) {
   let gained = 0;
-  let newBoard = [
-    [0,0,0,0],
-    [0,0,0,0],
-    [0,0,0,0],
-    [0,0,0,0]
-  ];
-
+  let newBoard = Array(4).fill(0).map(()=>[0,0,0,0]);
   for (let col = 0; col < 4; col++) {
-    let column = [
-      board[0][col],
-      board[1][col],
-      board[2][col],
-      board[3][col]
-    ];
-
+    let column = [board[0][col], board[1][col], board[2][col], board[3][col]];
     const reversed = column.reverse();
     const {line, score} = processLine(reversed);
     gained += score;
-
     const restored = line.reverse();
-
-    for (let row = 0; row < 4; row++) {
-      newBoard[row][col] = restored[row];
-    }
+    for (let row = 0; row < 4; row++) newBoard[row][col] = restored[row];
   }
-
   return { board: newBoard, score: gained };
 }
 
 // проверка конца игры
 function isGameOver() {
-  for (let i = 0; i < 4; i++) {
+  for (let i = 0; i < 4; i++)
     for (let j = 0; j < 4; j++) {
       if (board[i][j] === 0) return false;
       if (i < 3 && board[i][j] === board[i+1][j]) return false;
       if (j < 3 && board[i][j] === board[i][j+1]) return false;
     }
-  }
   return true;
 }
 
@@ -233,20 +192,24 @@ function handleGameOver() {
   startNewGame();
 }
 
+// сохраняем состояние для undo
+function savePrevState() {
+  prevBoard = board.map(row => [...row]);
+  prevScore = score;
+}
+
 // обработка хода
 document.addEventListener("keydown", (e) => {
   let result = null;
-
   if (e.key === "ArrowLeft")  result = moveLeft(board);
   if (e.key === "ArrowRight") result = moveRight(board);
   if (e.key === "ArrowUp")    result = moveUp(board);
   if (e.key === "ArrowDown")  result = moveDown(board);
-
   if (!result) return;
 
   const moved = JSON.stringify(result.board) !== JSON.stringify(board);
-
   if (moved) {
+    savePrevState(); // сохраняем для undo
     board = result.board;
     score += result.score;
     scoreDisplay.textContent = score;
@@ -255,20 +218,13 @@ document.addEventListener("keydown", (e) => {
     renderBoard();
     saveGame();
 
-    if (isGameOver()) {
-      handleGameOver();
-    }
+    if (isGameOver()) handleGameOver();
   }
 });
 
-// новая игра
+// кнопка "Новая игра"
 function startNewGame() {
-  board = [
-    [0,0,0,0],
-    [0,0,0,0],
-    [0,0,0,0],
-    [0,0,0,0]
-  ];
+  board = Array(4).fill(0).map(()=>[0,0,0,0]);
   score = 0;
   tilesContainer.innerHTML = '';
   addRandomTile();
@@ -276,11 +232,23 @@ function startNewGame() {
   renderBoard();
   scoreDisplay.textContent = score;
   saveGame();
+  prevBoard = null;
 }
 
 newGameBtn.addEventListener('click', startNewGame);
 
-// старт игры (загрузка сохранённого)
+// кнопка "Отмена хода"
+undoBtn.addEventListener('click', () => {
+  if (!prevBoard) return;
+  board = prevBoard.map(row => [...row]);
+  score = prevScore;
+  scoreDisplay.textContent = score;
+  renderBoard();
+  saveGame();
+  prevBoard = null; // только один откат
+});
+
+// старт игры
 if (!loadGame()) {
   startNewGame();
 }

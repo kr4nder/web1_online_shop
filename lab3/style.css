@@ -67,3 +67,17 @@ h1 { font-size:80px; font-weight:bold; color:#776e65; margin-bottom:20px; }
   from { transform:scale(0); }
   to   { transform:scale(1); }
 }
+
+button {
+  margin: 5px;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  background: #8f7a66;
+  color: white;
+  cursor: pointer;
+}
+button:hover {
+  background: #776e65;
+}
