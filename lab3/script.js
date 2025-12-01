@@ -1,5 +1,6 @@
 const tilesContainer = document.querySelector('.tiles');
 const gridContainer = document.querySelector('.grid');
+const scoreDisplay = document.getElementById('score');
 
 // динамическое создание сетки
 function createGrid() {
@@ -11,7 +12,6 @@ function createGrid() {
 }
 createGrid();
 
-
 // состояние игры
 let board = [
   [0, 0, 0, 0],
@@ -21,6 +21,11 @@ let board = [
 ];
 
 let score = 0;
+
+function updateScore(amount) {
+  score += amount;
+  scoreDisplay.textContent = score;
+}
 
 // генерация новой плитки
 function addRandomTile() {
@@ -48,10 +53,8 @@ function addRandomTile() {
 
 // отрисовка доски
 function renderBoard() {
-  // удалить все div.tile
   document.querySelectorAll('.tile').forEach(t => t.remove());
 
-  // создать заново
   for (let i = 0; i < 4; i++) {
     for (let j = 0; j < 4; j++) {
       if (board[i][j] !== 0) {
@@ -79,7 +82,7 @@ function processLine(line) {
       const merged = filtered[i] * 2;
       result.push(merged);
       gained += merged;
-      i++; 
+      i++;
     } else {
       result.push(filtered[i]);
     }
@@ -177,7 +180,6 @@ function moveDown(board) {
   return { board: newBoard, score: gained };
 }
 
-
 // обработка хода
 document.addEventListener("keydown", (e) => {
   let result = null;
@@ -193,7 +195,9 @@ document.addEventListener("keydown", (e) => {
 
   if (moved) {
     board = result.board;
-    score += result.score;
+
+    updateScore(result.score);
+
     addRandomTile();
     renderBoard();
   }
