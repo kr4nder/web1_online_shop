@@ -100,3 +100,22 @@ button:hover {
 .mobile-controls button:active {
   background:#8f7a66;
 }
+.game-over-message {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  background: rgba(238, 228, 218, 0.9);
+  padding: 30px 50px;
+  border-radius: 10px;
+  font-size: 36px;
+  color: #776e65;
+  font-weight: bold;
+  z-index: 10;
+  transition: transform 0.3s ease;
+}
+
+.game-over-message.show {
+  transform: translate(-50%, -50%) scale(1);
+}
+

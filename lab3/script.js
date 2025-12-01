@@ -174,10 +174,18 @@ function isGameOver() {
 }
 
 function handleGameOver() {
-  alert("Игра окончена!");
   saveRecord(score);
-  startNewGame();
+
+  const msg = document.getElementById('gameOverMessage');
+  msg.classList.add('show');
+
+  // через 2 секунды скрываем и начинаем новую игру
+  setTimeout(() => {
+    msg.classList.remove('show');
+    startNewGame();
+  }, 2000);
 }
+
 
 // сохраняем состояние для undo
 function savePrevState() {
