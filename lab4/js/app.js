@@ -101,3 +101,14 @@ async function renderCities() {
     renderWeather(weatherBlock, weather);
   }
 }
+
+// кнопка обновления
+const refreshBtn = document.getElementById("refreshBtn");
+
+// повторная загрузка погоды
+refreshBtn.addEventListener("click", () => {
+  if (appState.main) {
+    loadMainWeather();
+  }
+  renderCities();
+});
