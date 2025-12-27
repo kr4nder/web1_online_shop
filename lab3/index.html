@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2048</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>2048</h1>
+
+  <div class="score">Счёт: <span id="score">0</span></div>
+
+  <button id="newGameBtn">Новая игра</button>
+  <button id="undoBtn">Отмена хода</button>
+
+  <div class="records">
+    <h3>Топ-10 рекордов</h3>
+    <ol id="records"></ol>
+  </div>
+  <div id="gameOverMessage" class="game-over-message">Игра окончена!</div>
+  <div class="game-board">
+    <div class="grid"></div>
+    <div class="tiles"></div>
+  </div>
+
+  <!-- Виртуальные кнопки для мобильного -->
+  <div class="mobile-controls">
+    <button id="upBtn">↑</button>
+    <div class="middle-row">
+      <button id="leftBtn">←</button>
+      <button id="downBtn">↓</button>
+      <button id="rightBtn">→</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
