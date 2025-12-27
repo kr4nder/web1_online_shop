@@ -1,0 +1,60 @@
+* {
+    box-sizing: border-box;
+    font-family: arial, sans-serif;
+  }
+  
+  /* стили для body */
+  body {
+    margin: 0;
+    background: #eef2f5;
+  }
+  
+  /* стили для шапки */
+  header {
+    background: #2196f3;
+    color: white;
+    padding: 16px;
+  
+    /* flex для выравнивания заголовка и кнопки */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  /* основной контейнер */
+  main {
+    padding: 16px;
+    max-width: 1000px;
+    margin: auto;
+  }
+  
+  /* отступы между секциями */
+  section {
+    margin-bottom: 24px;
+  }
+  
+  /* контейнеры с погодой */
+  #weather-container,
+  .city-weather {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  
+  /* карточка погоды */
+  .weather-card {
+    background: white;
+    padding: 12px;
+    border-radius: 8px;
+    min-width: 120px;
+    text-align: center;
+  }
+  
+  /* адаптивность для мобильных устройств */
+  @media (max-width: 768px) {
+    #weather-container,
+    .city-weather {
+      flex-direction: column;
+    }
+  }
+  
