@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Прогноз погоды</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<header>
+  <h1>Прогноз погоды</h1>
+  <button id="refreshBtn">Обновить</button>
+</header>
+
+<main>
+  <section id="current">
+    <h2>Текущее местоположение</h2>
+    <div id="weather-container"></div>
+  </section>
+
+  <section id="cities-section">
+    <h2>Города</h2>
+
+    <form id="city-form">
+      <input type="text" id="city-input" placeholder="Введите город">
+      <span id="city-error"></span>
+      <button type="submit">Добавить</button>
+    </form>
+
+    <div id="cities-list"></div>
+  </section>
+</main>
+
+</body>
+</html>
