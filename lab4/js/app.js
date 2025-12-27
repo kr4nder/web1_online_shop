@@ -12,12 +12,13 @@ init();
 
 // инициализация приложения
 function init() {
-  if (appState.main) {
-    loadMainWeather();
-  } else {
-    requestGeolocation();
-  }
-}
+    if (appState.main) {
+      loadMainWeather();
+      renderCities();
+    } else {
+      requestGeolocation();
+    }
+  }  
 
 // запрос геолокации пользователя
 function requestGeolocation() {
