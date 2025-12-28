@@ -30,11 +30,18 @@
 
       <!-- форма добавления города -->
       <form id="city-form">
-        <input type="text" id="city-input" placeholder="Введите город">
-        <span id="city-error"></span>
+
+        <div class="city-input-wrapper">
+          <input type="text" id="city-input" placeholder="Введите город">
+          <div id="city-error"></div>
+      
+          <!-- выпадающий список городов -->
+          <ul id="city-suggestions"></ul>
+        </div>
+      
         <button type="submit">Добавить</button>
       </form>
-
+      
       <!-- контейнер для городов -->
       <div id="cities-list"></div>
     </section>
