@@ -1,6 +1,15 @@
 // контейнер основной погоды
 const weatherContainer = document.getElementById("weather-container");
 
+// фавикон
+(function addFavicon() {
+    const link = document.createElement('link');
+    link.rel = 'icon';
+    link.type = 'image/png';
+    link.href = './favicon.png';
+    document.head.appendChild(link);
+  })();
+
 // состояние приложения
 let appState = loadState() || {
   main: null,
