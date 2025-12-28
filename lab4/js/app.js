@@ -11,14 +11,14 @@ let appState = loadState() || {
 init();
 
 // инициализация приложения
-function init() {
+async function init() {
     if (appState.main) {
-      loadMainWeather();
-      renderCities();
+      await loadMainWeather();
+      await renderCities();
     } else {
       requestGeolocation();
     }
-  }  
+  }
 
 // запрос геолокации пользователя
 function requestGeolocation() {
