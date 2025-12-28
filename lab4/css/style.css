@@ -1,0 +1,108 @@
+* {
+    box-sizing: border-box;
+    font-family: arial, sans-serif;
+  }
+  
+  /* стили для body */
+  body {
+    margin: 0;
+    background: #eef2f5;
+  }
+  
+  /* стили для шапки */
+  header {
+    background: #2196f3;
+    color: white;
+    padding: 16px;
+  
+    /* flex для выравнивания заголовка и кнопки */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  /* основной контейнер */
+  main {
+    padding: 16px;
+    max-width: 1000px;
+    margin: auto;
+  }
+  
+  /* отступы между секциями */
+  section {
+    margin-bottom: 24px;
+  }
+  
+  /* контейнеры с погодой */
+  #weather-container,
+  .city-weather {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  
+  /* карточка погоды */
+  .weather-card {
+    background: white;
+    padding: 12px;
+    border-radius: 8px;
+    min-width: 120px;
+    text-align: center;
+  }
+  
+  /* адаптивность для мобильных устройств */
+  @media (max-width: 768px) {
+    #weather-container,
+    .city-weather {
+      flex-direction: column;
+    }
+  }
+  
+  /* контейнер формы */
+#city-form {
+    position: relative;
+  }
+  
+  /* выпадающий список */
+  #city-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+  
+    width: 100%;
+    margin: 4px 0 0;
+    padding: 0;
+  
+    list-style: none;
+    border: 1px solid #ccc;
+    background: #fff;
+  
+    max-height: 150px;
+    overflow-y: auto;
+    z-index: 1000;
+  
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  }
+  
+  /* элемент списка */
+  #city-suggestions li {
+    padding: 6px 10px;
+    cursor: pointer;
+  }
+  
+  /* hover */
+  #city-suggestions li:hover {
+    background: #eee;
+  }
+  
+  /* ошибка */
+  #city-error {
+    color: red;
+    font-size: 14px;
+  }
+
+  /* контейнер для инпута и подсказок */
+.city-input-wrapper {
+    position: relative;
+  }
+  

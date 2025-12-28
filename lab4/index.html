@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Прогноз погоды</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header>
+    <h1>Прогноз погоды</h1>
+
+    <!-- кнопка ручного обновления -->
+    <button id="refreshBtn">Обновить</button>
+  </header>
+
+  <main>
+    <!-- секция основной локации -->
+    <section id="current">
+      <h2 id="location-title">Текущее местоположение</h2>
+
+      <!-- контейнер карточек погоды -->
+      <div id="weather-container"></div>
+    </section>
+
+    <!-- секция добавленных городов -->
+    <section id="cities-section">
+      <h2>Города</h2>
+
+      <!-- форма добавления города -->
+      <form id="city-form">
+
+        <div class="city-input-wrapper">
+          <input type="text" id="city-input" placeholder="Введите город">
+          <div id="city-error"></div>
+      
+          <!-- выпадающий список городов -->
+          <ul id="city-suggestions"></ul>
+        </div>
+      
+        <button type="submit">Добавить</button>
+      </form>
+      
+      <!-- контейнер для городов -->
+      <div id="cities-list"></div>
+    </section>
+
+    <!-- текстовый статус -->
+    <div id="status"></div>
+  </main>
+
+  <!-- подключение скриптов -->
+  <script src="js/api.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>
